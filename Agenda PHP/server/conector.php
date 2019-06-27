@@ -23,14 +23,6 @@
       }
     }
 
-    function ejecutarQuery($query){
-      return $this->conexion->query($query);
-    }
-
-    function cerrarConexion(){
-      $this->conexion->close();
-    }
-
     function newTable($nombre_tbl, $campos){
       $sql = 'CREATE TABLE '.$nombre_tbl.' (';
       $length_array = count($campos);
@@ -45,6 +37,14 @@
         $i++;
       }
       return $this->ejecutarQuery($sql);
+    }
+
+    function ejecutarQuery($query){
+      return $this->conexion->query($query);
+    }
+
+    function cerrarConexion(){
+      $this->conexion->close();
     }
 
     function nuevaRestriccion($tabla, $restriccion){
@@ -104,7 +104,8 @@
 
     function consultar($tablas, $campos, $condicion = ""){
       $sql = "SELECT ";
-      $ultima_key = end(array_keys($campos));
+      $keys= array_keys($campos);
+      $ultima_key = $keys[count($keys)-1];
       foreach ($campos as $key => $value) {
         $sql .= $value;
         if ($key!=$ultima_key) {
@@ -112,7 +113,8 @@
         }else $sql .=" FROM ";
       }
 
-      $ultima_key = end(array_keys($tablas));
+      $keys= array_keys($tablas);
+      $ultima_key = $keys[count($keys)-1];
       foreach ($tablas as $key => $value) {
         $sql .= $value;
         if ($key!=$ultima_key) {
@@ -125,35 +127,8 @@
       }else {
         $sql .= $condicion.";";
       }
-
       return $this->ejecutarQuery($sql);
     }
-
-    function consultaCompuesta($tablas, $campos, $relaciones, $condicion = ""){
-      $sql = "SELECT ";
-      $ultima_key = end(array_keys($campos));
-      foreach ($campos as $key => $value) {
-        $sql .= $value;
-        if ($key!=$ultima_key) {
-          $sql.=", ";
-        }else $sql .=" FROM ";
-      }
-      $sql .= $tablas[0]." ";
-      $ultima_key = end(array_keys($tablas));
-      foreach ($tablas as $key => $value) {
-        if ($key != 0) {
-          $sql .= "JOIN ".$value." ON ".$relaciones[$key-1]." \n";
-        }
-      }
-      if ($condicion == "") {
-        $sql .= ";";
-      }else {
-        $sql .= $condicion.";";
-      }
-      return $this->ejecutarQuery($sql);
-    }
-
-
   }
 
 

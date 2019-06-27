@@ -1,41 +1,37 @@
 <?php
 
-require('conector.php');
-  $user = $_POST['username'];
-  $pwd = $_POST['password'];
+require('./conector.php');
 
-  $con = new ConectorBD('localhost','primerUSer','12345');
+  $con = new ConectorBD('localhost','root','');
 
-  //$response['conexion'] = $con->initConexion('agenda');
+  $response['conexion'] =$con->initConexion('agenda');
 
-  if ($con->initConexion('agenda')=='OK') {
-    if(isset($user)){
+  if ($response['conexion']=='OK') {
       $resultado_consulta = $con->consultar(['usuarios'],
-        ['email', 'password'], 'WHERE email="'.$user.'"');
+      ['email', 'password'], 'WHERE email="'.$_POST['username'].'"');
 
-        if ($resultado_consulta->num_rows != 0) {
-          $fila = $resultado_consulta->fetch_assoc();
-          if (password_verify($pwd, $fila['password'])) {
-            $response['acceso'] = 'concedido';
-            //session_start();
-            //$_SESSION['username']=$fila['email'];
-          }else {
-            $response['motivo'] = 'Contraseña incorrecta';
-            $response['acceso'] = 'rechazado';
-          }
-        }else{
-          $response['motivo'] = 'Email incorrecto';
-          $response['acceso'] = 'rechazado';
+      /*if ($resultado_consulta->num_rows != 0) {
+        $fila = $resultado_consulta->fetch_assoc();
+        if (password_verify($_POST['password'], $fila['password'])) {
+          $response['msg'] = 'OK';
+          //session_start();
+          //$_SESSION['username']=$fila['email'];
+        }else {
+          $response['motivo'] = 'Contraseña incorrecta';
+          $response['msg'] = 'rechazado';
         }
-    }else {
-      $response['motivo'] = 'No hay variables';
-    }
-  }
+      }else{
+        $response['motivo'] = 'Email incorrecto';
+        $response['msg'] = 'rechazado';
+      }*/
+      $fila = $resultado_consulta->fetch_assoc();
+      $response['ps'] = password_verify($_POST['password'], $fila['password']);
+      $response['dir'] = $_POST['password'];
+      $response['msg'] = 'OK';
+}
 
- echo json_encode($response);
+echo json_encode($response);
 
  $con->cerrarConexion();
-
-
 
  ?>

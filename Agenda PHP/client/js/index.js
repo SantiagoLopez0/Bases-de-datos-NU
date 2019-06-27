@@ -28,15 +28,19 @@ class Login {
       data: form_data,
       type: 'POST',
       success: function(php_response){
-        if (php_response.acceso == "concedido") {
-          window.location.href = 'main.html';
+        if (php_response.msg == "OK") {
+          //window.location.href = 'main.html';
+          alert(php_response.msg);
+          alert(php_response.ps);
+          alert(php_response.dir);
         }else {
           alert(php_response.msg);
+          alert(php_response.motivo);
         }
       },
-      error: function(){
-        alert("error en la comunicación con el servidor");
+      error: function(err){
+        console.log(err);
       }
-    })
+    });
   }
 }
