@@ -29,10 +29,7 @@ class Login {
       type: 'POST',
       success: function(php_response){
         if (php_response.msg == "OK") {
-          //window.location.href = 'main.html';
-          alert(php_response.msg);
-          alert(php_response.ps);
-          alert(php_response.dir);
+          window.location.href = 'main.html';
         }else {
           alert(php_response.msg);
           alert(php_response.motivo);
