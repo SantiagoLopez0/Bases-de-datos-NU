@@ -18,9 +18,11 @@ class EventsManager {
           type: 'GET',
           success: (data) =>{
             if (data.msg=="OK") {
+              //console.log(data.msg);
+              console.log(data.eventos);
               this.poblarCalendario(data.eventos);
             }else {
-              alert(data.msg)
+              alert(data.msg);
               window.location.href = 'index.html';
             }
           },
@@ -209,12 +211,23 @@ function initForm(){
   $('#start_date, #end_date').datepicker({
     dateFormat: "yy-mm-dd"
   });
-  $('.timepicker').timepicker({
+  $('.timepicker1').timepicker({
     timeFormat: 'HH:mm',
     interval: 30,
     minTime: '5',
     maxTime: '23:30',
-    defaultTime: '7',
+    defaultTime: '6',
+    startTime: '5:00',
+    dynamic: false,
+    dropdown: true,
+    scrollbar: true
+  });
+  $('.timepicker2').timepicker({
+    timeFormat: 'HH:mm',
+    interval: 30,
+    minTime: '5',
+    maxTime: '23:30',
+    defaultTime: '20',
     startTime: '5:00',
     dynamic: false,
     dropdown: true,

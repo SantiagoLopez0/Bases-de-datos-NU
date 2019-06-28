@@ -7,7 +7,7 @@ if (isset($_SESSION['username'])) {
   $con = new ConectorBD('localhost', 'primerUSer', '12345');
 
   if ($con->initConexion('agenda')=='OK') {
-    $response['eventos'] = "[";
+    $response['eventos'] = array();
     $consulta_user = $con->consultar(['usuarios'], ['id'], "WHERE email ='" .$_SESSION['username']."'");
     $filaUser = $consulta_user->fetch_assoc();
 
@@ -17,31 +17,28 @@ if (isset($_SESSION['username'])) {
     $numRegistros = $consulta_eventos->num_rows;
 
     if ($numRegistros != 0) {
+      //$i = 1;
     while ($filaEvent = $consulta_eventos->fetch_assoc()) {
-      $i = 1;
-      $titulo = $filaEvent['titulo'];
-      $inicio = $filaEvent['fecha_inicio'];
-      $fin = $filaEvent['fecha_fin'];
+      $res['title'] = $filaEvent['titulo'];
 
       if($filaEvent['FullDay'] == 1){
-        $diaEntero = "true";
+        $res['allDay'] = true;
       }else{
-        $diaEntero = "false";
+        $res['allDay'] = false;
       }
 
-      $response['eventos'] .= '{
-        title  : "'.$titulo.'",
-        start  : "'.$inicio.'",
-        end    : "'.$fin.'",
-        allDay : "'.$diaEntero.'"'
-        .'}';
-        $i++;
+      if($filaEvent['fecha_inicio'] == "00:00:00"){
+        $res['start'] = $filaEvent['fecha_inicio'];
+      }else {
+        $res['start'] = $filaEvent['fecha_inicio']."T".$filaEvent['hora_inicio'];
+      }
 
-        if($i != $numRegistros){
-          $response['eventos'] .= ',';
-        }else{
-          $response['eventos'] .= ']';
-        }
+      if($filaEvent['fecha_fin'] != "0000-00-00"){
+        $res['end'] = $filaEvent['fecha_fin']."T".$filaEvent['hora_fin'];;
+      }
+
+
+      array_push($response['eventos'], $res);
     }
   }else {
     $response['eventos'] .= "{}]";
@@ -57,5 +54,9 @@ if (isset($_SESSION['username'])) {
 
 
 echo json_encode($response);
+
+//echo json_encode($eventArray);
+
+$con->cerrarConexion();
 
  ?>
