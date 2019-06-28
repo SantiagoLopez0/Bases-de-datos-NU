@@ -12,13 +12,14 @@ if (isset($_SESSION['username'])) {
     $filaUser = $consulta_user->fetch_assoc();
 
     $consulta_eventos = $con->consultar(['eventos'],
-    ['titulo', 'fecha_inicio', 'hora_inicio', 'fecha_fin', 'hora_fin', 'FullDay'], "WHERE fk_usuario ='" .$filaUser['id']."'");
+    ['id', 'titulo', 'fecha_inicio', 'hora_inicio', 'fecha_fin', 'hora_fin', 'FullDay'], "WHERE fk_usuario ='" .$filaUser['id']."'");
 
     $numRegistros = $consulta_eventos->num_rows;
 
     if ($numRegistros != 0) {
       //$i = 1;
     while ($filaEvent = $consulta_eventos->fetch_assoc()) {
+      $res['id'] = $filaEvent['id'];
       $res['title'] = $filaEvent['titulo'];
 
       if($filaEvent['FullDay'] == 1){
