@@ -18,8 +18,8 @@ class EventsManager {
           type: 'GET',
           success: (data) =>{
             if (data.msg=="OK") {
-              //console.log(data.msg);
-              console.log(data.eventos);
+              console.log(data.msg);
+              //console.log(data.eventos);
               this.poblarCalendario(data.eventos);
             }else {
               alert(data.msg);
