@@ -13,7 +13,6 @@ session_start();
       $consulta_eventos = $con->consultar(['eventos'], ['*']);
       $numRegistros = $consulta_eventos->num_rows;
 
-      $data['id'] = $numRegistros++;
       $data['titulo'] = "'".$_POST['titulo']."'";
       $data['fecha_inicio'] = "'".$_POST['start_date']."'";
       $data['fecha_fin'] = "'".$_POST['end_date']."'";
@@ -28,8 +27,11 @@ session_start();
       }
 
       if ($con->insertData('eventos', $data)) {
+        $resultado = $con->consultar(['eventos'],['MAX(id)']);
+        $fila = $resultado->fetch_assoc();
+        $response['id']=$fila['MAX(id)'];
+
         $response['msg']= 'OK';
-        $response['id'] = $numRegistros++;
       }else {
         $response['msg']= 'No se pudo realizar la inserción de los datos.';
       }
