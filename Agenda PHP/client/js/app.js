@@ -40,7 +40,7 @@ class EventsManager {
         		center: 'title',
         		right: 'month,agendaWeek,basicDay'
         	},
-        	defaultDate: '2019-06-27',
+        	defaultDate: '2019-07-27',
         	navLinks: true,
         	editable: true,
         	eventLimit: true,
@@ -99,6 +99,7 @@ class EventsManager {
             alert('Se ha añadido el evento exitosamente');
             if (document.getElementById('allDay').checked) {
               $('.calendario').fullCalendar('renderEvent', {
+                id: data.id,
                 title: $('#titulo').val(),
                 start: $('#start_date').val(),
                 allDay: true
@@ -235,9 +236,11 @@ function initForm(){
   });
   $('#allDay').on('change', function(){
     if (this.checked) {
-      $('.timepicker, #end_date').attr("disabled", "disabled")
+      $('.timepicker1, #end_date').attr("disabled", "disabled");
+      $('.timepicker2, #end_date').attr("disabled", "disabled");
     }else {
-      $('.timepicker, #end_date').removeAttr("disabled")
+      $('.timepicker1, #end_date').removeAttr("disabled")
+      $('.timepicker2, #end_date').removeAttr("disabled")
     }
   })
 

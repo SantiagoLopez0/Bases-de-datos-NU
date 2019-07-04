@@ -10,6 +10,10 @@ session_start();
       $consulta_user = $con->consultar(['usuarios'], ['id'], "WHERE email ='" .$_SESSION['username']."'");
       $filaUser = $consulta_user->fetch_assoc();
 
+      $consulta_eventos = $con->consultar(['eventos'], ['*']);
+      $numRegistros = $consulta_eventos->num_rows;
+
+      $data['id'] = $numRegistros++;
       $data['titulo'] = "'".$_POST['titulo']."'";
       $data['fecha_inicio'] = "'".$_POST['start_date']."'";
       $data['fecha_fin'] = "'".$_POST['end_date']."'";
@@ -25,6 +29,7 @@ session_start();
 
       if ($con->insertData('eventos', $data)) {
         $response['msg']= 'OK';
+        $response['id'] = $numRegistros++;
       }else {
         $response['msg']= 'No se pudo realizar la inserción de los datos.';
       }

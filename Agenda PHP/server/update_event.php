@@ -15,13 +15,11 @@ if (isset($_SESSION['username'])) {
 
     $sql = 'UPDATE eventos SET fecha_inicio = "'.$fechaIn.'", hora_inicio="'.$horaIn.'", fecha_fin="'.$fechaFn.'", hora_fin="'.$horaFn.'" WHERE id = '.$eventId.';';
 
-
     if($con->ejecutarQuery($sql)){
       $response['msg'] = "OK";
     }else {
       $response['msg'] = "Error al actualizar registro";
     }
-
 
   }else {
     $response['msg'] = "Error en la conexion con la base de datos";

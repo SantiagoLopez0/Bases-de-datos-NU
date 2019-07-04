@@ -42,7 +42,7 @@ if (isset($_SESSION['username'])) {
       array_push($response['eventos'], $res);
     }
   }else {
-    $response['eventos'] .= "{}]";
+    $response['eventos'] = array();
   }
     $response['msg'] = 'OK';
   }else {
