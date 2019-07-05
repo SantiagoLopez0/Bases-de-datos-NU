@@ -22,16 +22,23 @@
   <script src="js/jquery.js"></script>
   <script src="js/jquery-ui.min.js"></script>
   <script>
-  
 
 
+  $.ajax({
+      url: '/usuarios/verificar',
+      method: 'GET',
+      data: {user:'User1'},
+      success: function(response) {
+        alert(response);
+      }
+  });
 
   var nombreUsuario = $('#user');
   var pass = $('#pass');
   $('.loginButton').on('click', function(event) {
     if (nombreUsuario.val() != "" && pass.val() != "") {
       $.post('/usuarios/login',{user: nombreUsuario.val(), pass: pass.val()}, function(response) {
-        showMessage(response)
+        alert(response);
         if (response == "Validado") {
           window.location.href = "http://localhost:3000/main.html"
         }
