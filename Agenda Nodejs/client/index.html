@@ -16,23 +16,11 @@
       <input type="text" id="user" placeholder="Usuario..." />
       <input type="password" id="pass" placeholder="Contraseña..." />
       <button id="login" class="loginButton">Ingresar</button>
-      <div id="message" style="display:none"></div>
     </div>
   </div>
   <script src="js/jquery.js"></script>
   <script src="js/jquery-ui.min.js"></script>
   <script>
-
-
-  $.ajax({
-      url: '/usuarios/verificar',
-      method: 'GET',
-      data: {user:'User1'},
-      success: function(response) {
-        alert(response);
-      }
-  });
-
   var nombreUsuario = $('#user');
   var pass = $('#pass');
   $('.loginButton').on('click', function(event) {
@@ -40,7 +28,7 @@
       $.post('/usuarios/login',{user: nombreUsuario.val(), pass: pass.val()}, function(response) {
         alert(response);
         if (response == "Validado") {
-          window.location.href = "http://localhost:3000/main.html"
+          window.location.href = "http://localhost:8082/main.html"
         }
       })
     } else {
