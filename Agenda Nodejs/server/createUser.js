@@ -1,23 +1,16 @@
-var Usuario = require('./schemaUser.js')
+let Usuario = require('./schemaUser.js'),
+    mongoose = require('mongoose');
 
-module.exports.crearUsuarios = function(callback){
-  var arr = [
-    { email: 'user1@mail.com',
-      user: "User1", password: "12345"
-    },
+mongoose.connect('mongodb://localhost/agenda', { useNewUrlParser: true }, (err, connection)=>{
+
+  let newUsers = new Usuario(
     {
-      email: 'User2@hotmail.com',
-      user: "Usuario2", password: "654321"
-    }];
-  Usuario.insertMany(arr, function(error, docs) {
-    if (error){
-      if (error.code == 11000){
-        callback("USUARIO: User1, CONTRASEÑA: 12345");
-      }else{
-        callback(error.message);
-      }
-    }else{
-      callback("Usuario registrado correctamente");
-    }
-  });
-}
+      user: "User1",
+      email: "user1@mail.com",
+      password: "12345"
+    });
+
+    newUsers.save((err, doc)=>{
+      console.log(err);
+    });
+});

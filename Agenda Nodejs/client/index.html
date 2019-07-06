@@ -21,12 +21,13 @@
   <script src="js/jquery.js"></script>
   <script src="js/jquery-ui.min.js"></script>
   <script>
+
+
   var nombreUsuario = $('#user');
   var pass = $('#pass');
   $('.loginButton').on('click', function(event) {
     if (nombreUsuario.val() != "" && pass.val() != "") {
       $.post('/usuarios/login',{user: nombreUsuario.val(), pass: pass.val()}, function(response) {
-        alert(response);
         if (response == "Validado") {
           window.location.href = "http://localhost:8082/main.html"
         }

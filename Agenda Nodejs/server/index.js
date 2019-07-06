@@ -3,27 +3,27 @@ const http = require('http'),
       express = require('express'),
       session = require('express-session'),
       bodyParser = require('body-parser'),
-      mongoose = require('mongoose'),
-      autoIncrement = require('mongoose-auto-increment');
+      mongoose = require('mongoose');
 
 
-let connection = mongoose.createConnection('mongodb://localhost/agenda');
 
-autoIncrement.initialize(connection)
+mongoose.connect('mongodb://localhost/agenda', { useNewUrlParser: true });
+
+
 
 const PORT = 8082
 const app = express()
 
-const Server = http.createServer(app)
+const Server = http.createServer(app);
 
-const RoutingUser = require('./rutasUsuarios.js');
-    //  RoutingEvent = require('./rutasEventos.js');
+const RoutingUser = require('./rutasUsuarios.js'),
+      RoutingEvent = require('./rutasEventos.js');
 
 
 
-app.use(express.static('../client'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true}));
+app.use(express.static('../client'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true}))
 app.use(session({
     secret: 'secret-pass',
     cookie: { maxAge: 3600000 },
@@ -31,8 +31,8 @@ app.use(session({
     saveUninitialized: true,
   }));
 
-app.use('/usuarios', RoutingUser);
-//app.use('/events', RoutingEvent);
+app.use('/usuarios', RoutingUser)
+app.use('/events', RoutingEvent)
 
 Server.listen(PORT, function() {
   console.log('Server is listeng on port: ' + PORT)

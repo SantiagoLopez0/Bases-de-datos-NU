@@ -10,6 +10,10 @@ const mongoose = require('mongoose'),
       user: { type: Schema.ObjectId, ref: "Usuario" }
     });
 
+var connection = mongoose.createConnection("mongodb://localhost/agenda");
+
+autoIncrement.initialize(connection);
+
 
 EventSchema.plugin(autoIncrement.plugin, {model: 'Evento', startAt: 1} );
 

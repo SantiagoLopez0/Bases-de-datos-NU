@@ -7,10 +7,19 @@ class EventManager {
         this.guardarEvento()
     }
 
+    sessionError(){
+      alert('Usuario no ha iniciado sesión')
+      window.location.href = 'http://localhost:3000/index.html'
+    }
+
     obtenerDataInicial() {
         let url = this.urlBase + "/all"
         $.get(url, (response) => {
-            this.inicializarCalendario(response)
+          if(response == "logout" ){
+            this.sessionError()
+          }else{
+            this.inicializarCalendario(response) 
+          }
         })
     }
 
@@ -87,7 +96,7 @@ class EventManager {
                 center: 'title',
                 right: 'month,agendaWeek,basicDay'
             },
-            defaultDate: '2016-11-01',
+            defaultDate: '2019-07-06',
             navLinks: true,
             editable: true,
             eventLimit: true,
@@ -117,6 +126,23 @@ class EventManager {
                 }
             })
         }
+
+        cerrarSesion(){
+          var url = "/usuarios/logout",
+              data = "";
+          $.post(url, data, (response) => {
+            if(response == "logout"){
+              window.location.href="http://localhost:3000/index.html";
+            }else{
+              alert("Error inesperado al cerrar sesión");
+            }
+          })
+        }
+
     }
 
-    const Manager = new EventManager()
+const Manager = new EventManager()
+
+$('.logout-container').on('click', function(){
+    Manager.cerrarSesion();
+})
