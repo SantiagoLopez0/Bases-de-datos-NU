@@ -9,25 +9,29 @@ class EventManager {
 
     sessionError(){
       alert('Usuario no ha iniciado sesión')
-      window.location.href = 'http://localhost:3000/index.html'
+      window.location.href = 'http://localhost:8082/index.html'
     }
 
     obtenerDataInicial() {
         let url = this.urlBase + "/all"
         $.get(url, (response) => {
-          if(response == "logout" ){
+          if(response == "sessionEnd" ){
             this.sessionError()
           }else{
-            this.inicializarCalendario(response) 
+            this.inicializarCalendario(response)
           }
         })
     }
 
     eliminarEvento(evento) {
-        let eventId = evento.id
-        $.post('/events/delete/'+eventId, {id: eventId}, (response) => {
-            alert(response)
-        })
+      let eventId = evento._id;
+      $.post('/events/delete/'+eventId, {_id: eventId}, (response) => {
+          if(response == "sessionEnd"){
+            this.sessionError();
+          }else{
+              alert(response);
+          }
+      });
     }
 
     guardarEvento() {
@@ -55,9 +59,19 @@ class EventManager {
                     end: end
                 }
                 $.post(url, ev, (response) => {
-                    alert(response)
+                  if(response == "sessionEnd"){
+                    this.sessionError();
+                  }else {
+                  let newEv = {
+                      _id : response,
+                      title: title,
+                      start: start,
+                      end: end
+                  }
+                    $('.calendario').fullCalendar('renderEvent', newEv);
+                    alert("Evento creado");
+                  }
                 })
-                $('.calendario').fullCalendar('renderEvent', ev)
             } else {
                 alert("Complete los campos obligatorios para el evento")
             }
@@ -74,7 +88,7 @@ class EventManager {
             interval: 30,
             minTime: '5',
             maxTime: '23:59:59',
-            defaultTime: '',
+            defaultTime: '5:00',
             startTime: '5:00',
             dynamic: false,
             dropdown: true,
@@ -108,8 +122,8 @@ class EventManager {
             },
             events: eventos,
             eventDragStart: (event,jsEvent) => {
-                $('.delete').find('img').attr('src', "img/trash-open.png");
-                $('.delete').css('background-color', '#a70f19')
+              //alert(event._id);
+              $('.delete').css('background-color', '#a70f19')
             },
             eventDragStop: (event,jsEvent) => {
                 var trashEl = $('.delete');
@@ -121,7 +135,7 @@ class EventManager {
                 if (jsEvent.pageX >= x1 && jsEvent.pageX<= x2 &&
                     jsEvent.pageY >= y1 && jsEvent.pageY <= y2) {
                         this.eliminarEvento(event)
-                        $('.calendario').fullCalendar('removeEvents', event.id);
+                        $('.calendario').fullCalendar('removeEvents', event._id);
                     }
                 }
             })
@@ -132,14 +146,40 @@ class EventManager {
               data = "";
           $.post(url, data, (response) => {
             if(response == "logout"){
-              window.location.href="http://localhost:3000/index.html";
+              window.location.href="http://localhost:8082/index.html";
             }else{
               alert("Error inesperado al cerrar sesión");
             }
           })
         }
 
-    }
+        actualizarEvento(evento) {
+
+          if(evento.end === null){
+            var start = moment(evento.start).format('YYYY-MM-DD'),
+                url = '/events/update/'+evento._id+'&'+start+'&'+start
+          }else{
+            var start = moment(evento.start).format('YYYY-MM-DD HH:mm:ss'),
+                end = moment(evento.end).format('YYYY-MM-DD HH:mm:ss'),
+                url = '/events/update/'+evento._id+'&'+start+'&'+end
+          }
+
+            var  data = {
+                  id: evento._id,
+                  start: start,
+                  end: end
+              }
+              $.post(url, data, (response) => { 
+                  if(response == "sessionEnd" ){
+                    this.sessionError()
+                  }else{
+                    alert(response)
+                  }
+              })
+        }
+
+
+}
 
 const Manager = new EventManager()
 
